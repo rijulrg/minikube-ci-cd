@@ -67,7 +67,7 @@ node {
 		dev_name = sh(script: "git --no-pager show -s --format='%an'", returnStdout: true).trim()		
         }
 
-	def deploymentName = "frontend-admin-service -n exchange-frontend"
+	def deploymentName = "test-deployment"
 	def imageName = "rijulrg/test:${commitId}"
 	def projectName = "honest_food_task"
 	def projectKey = "hft"
