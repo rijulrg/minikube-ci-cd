@@ -4,12 +4,12 @@ FROM node:10
 WORKDIR /usr/src/app
 
 # Install app dependencies
-COPY test-app/package*.json ./
+COPY package*.json ./
 RUN npm install
 
 # Copy app files
-COPY test-app/test ./test
-COPY test-app/server.js ./
+COPY test ./test
+COPY server.js ./
 
 # Exposing ports
 EXPOSE 3000
