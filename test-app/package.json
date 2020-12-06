@@ -1,0 +1,19 @@
+{
+    "name": "nodejs-app",
+    "version": "1.0.0",
+    "description": "Nodejs project",
+    "author": "rg",
+    "main": "server.js",
+    "scripts": {
+      "start": "node server.js",
+      "test": "npm install inherits && mocha"
+    },
+    "dependencies": {
+      "express": "^4.16.1"
+    },
+    "devDependencies": {
+      "inherits": "^2.0.4",
+      "mocha": "^8.0.1"
+    }
+  }
+  
