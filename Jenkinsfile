@@ -1,8 +1,7 @@
 def sonarqube(projectName, projectKey){
-	def sonarqubeScannerHome = tool name: 'sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation' 
+	def sonarqubeScannerHome = tool name: 'sonar', type: 'hudson.plugins.sonar.SonarRunnerInstallation'
 	withSonarQubeEnv("sonarqube-server"){
 		withCredentials([string(credentialsId: 'sonar', variable: 'sonarLogin')]) {
-			// sh "npm install typescript"
 			sh "${sonarqubeScannerHome}/bin/sonar-scanner -Dsonar.exclusions=node_modules/** -Dsonar.host.url=http://sonarqube:9000 -Dsonar.login=${sonarLogin} -Dsonar.projectName=${projectName} -Dsonar.projectKey=${projectKey}"
 		}
 	}
