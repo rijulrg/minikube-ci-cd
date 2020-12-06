@@ -30,7 +30,7 @@ def qualityGate(){
 }
 
 def dockerBuildPush(imageName){
-	docker.withRegistry('https://index.docker.io/v1/') {
+	docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
 	def app = docker.build( "${imageName}", '.').push()
 	}
 	sh 'sleep 2'
@@ -57,11 +57,6 @@ node {
     def commitId 
 	def dev_email
     def dev_name
-	def deploymentName = "frontend-admin-service -n exchange-frontend"
-	def imageName = "rijulrg/test:${commitId}"
-	def projectName = "honest_food_task"
-	def projectKey = "hft"
-    def PROJECT_NAME = 'Honest Food Task'
 
     stage('SCM') {
 		cleanWs()
@@ -71,6 +66,13 @@ node {
 		dev_email = sh(script: "git --no-pager show -s --format='%ae'", returnStdout: true).trim()
 		dev_name = sh(script: "git --no-pager show -s --format='%an'", returnStdout: true).trim()		
         }
+
+	def deploymentName = "frontend-admin-service -n exchange-frontend"
+	def imageName = "rijulrg/test:${commitId}"
+	def projectName = "honest_food_task"
+	def projectKey = "hft"
+    def PROJECT_NAME = 'Honest Food Task'
+
 	try{
 		stage('Test') {
 			test()
