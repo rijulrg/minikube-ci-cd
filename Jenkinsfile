@@ -48,7 +48,8 @@ def deploymentK8s(commitId,deploymentName,imageName){
 def test(){
 	def myTestContainer = docker.image('node:10')
         myTestContainer.pull()
-        myTestContainer.inside {    
+        myTestContainer.inside {  
+			sh 'cd test-app'  
             sh 'npm install --only=dev'
             sh 'npm test'
             }
