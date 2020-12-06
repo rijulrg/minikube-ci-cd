@@ -31,7 +31,7 @@ def qualityGate(){
 }
 
 def dockerBuildPush(imageName){
-	docker.withRegistry('https://index.docker.io/v1/', 'dockerhub') {
+	docker.withRegistry('https://index.docker.io/v1/') {
 	def app = docker.build( "${imageName}", '.').push()
 	}
 	sh 'sleep 2'
@@ -39,7 +39,7 @@ def dockerBuildPush(imageName){
 }
 
 def deploymentK8s(commitId,deploymentName,imageName){
-	withKubeConfig([credentialsId: 'kubernetesProd']) {    	
+	withKubeConfig([credentialsId: 'kubernetesMinikube']) {    	
 		sh "cat k8s/deployment.yaml | sed 's/{{COMMIT_ID}}/${commitId}/g' | kubectl apply -f -"
 		sh "kubectl annotate deployment ${deploymentName} kubernetes.io/change-cause='${imageName}' --record=false --overwrite=true"
 		sh 'kubectl apply -f k8s/service.yaml'
@@ -72,31 +72,28 @@ node {
 		dev_email = sh(script: "git --no-pager show -s --format='%ae'", returnStdout: true).trim()
 		dev_name = sh(script: "git --no-pager show -s --format='%an'", returnStdout: true).trim()		
         }
-
-	if (env.BRANCH_NAME.startsWith("testing_")){
-		try{
-			stage('Test') {
-				test()
-			}
-			
-			stage('Sonar-Scanner') {
-				sonarqube("${projectName}", "${projectKey}")
-			}
-				
-			stage('Quality Gate'){
-				qualityGate()
-			}
-				
-			stage('Docker Build/Push Cleanup') {
-				dockerBuildPush("${imageName}")
-			}
-
-			stage('Deployment') {
-                STAGE=env.STAGE_NAME
-				deploymentK8s("${commitId}", "${deploymentName}", "${imageName}")	
-			}
-		} catch(error){
-            sh "echo ${error}"
+	try{
+		stage('Test') {
+			test()
 		}
+			
+		stage('Sonar-Scanner') {
+			sonarqube("${projectName}", "${projectKey}")
+		}
+			
+		stage('Quality Gate'){
+			qualityGate()
+		}
+			
+		stage('Docker Build/Push Cleanup') {
+			dockerBuildPush("${imageName}")
+		}
+
+		stage('Deployment') {
+            STAGE=env.STAGE_NAME
+			deploymentK8s("${commitId}", "${deploymentName}", "${imageName}")	
+		}
+	} catch(error){
+        sh "echo ${error}"
 	}	
 }
