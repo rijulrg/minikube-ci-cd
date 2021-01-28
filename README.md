@@ -1,4 +1,4 @@
-# Minikub CI/CD 
+# Minikube CI/CD 
 
 A complete ci/cd pipeline for basic NodeJS app.
 
