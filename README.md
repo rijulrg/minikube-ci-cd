@@ -20,7 +20,7 @@ A step by step guide that will tell you how to get a development env running:
 
 1. Build custom jenkins image with docker, nodejs and kubectl
 ```
-docker build -t jenkins-custom/Dockerfile -t {custom_name} .
+docker build -t jenkins/Dockerfile -t {custom_name} .
 ```
 2. Bring up the Jenkins, Sonarqube and Postgresql. (local machine)
 ```
